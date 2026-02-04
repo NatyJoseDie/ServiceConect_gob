@@ -2,6 +2,13 @@ namespace sc.muni;
 
 using { managed, cuid } from '@sap/cds/common';
 
+type ProfessionalStatus : String enum {
+    ACTIVE    = 'ACTIVE';
+    INACTIVE  = 'INACTIVE';
+    SUSPENDED = 'SUSPENDED';
+    EXPIRED   = 'EXPIRED';
+}
+
 entity Professionals : cuid, managed {
     fullName           : String(100);
     registrationNumber : String(50); // Matrícula
@@ -10,15 +17,29 @@ entity Professionals : cuid, managed {
     location           : String(255);
     latitude           : Decimal(9, 6);
     longitude          : Decimal(9, 6);
-    isVerified         : Boolean default true;
+    status             : ProfessionalStatus default 'ACTIVE';
+    validatedBy        : String(100); // ID del Operador
+    validationDate     : Timestamp;
     trade              : Association to Trades;
     neighborhood       : Association to Neighborhoods;
+    specializations    : Composition of many ProfessionalSpecializations on specializations.professional = $self;
 }
 
 entity Trades : cuid {
-    name        : String(100);
-    category    : Association to Categories;
-    professionals : Association to many Professionals on professionals.trade = $self;
+    name           : String(100);
+    category       : Association to Categories;
+    specializations : Association to many Specializations on specializations.trade = $self;
+    professionals  : Association to many Professionals on professionals.trade = $self;
+}
+
+entity Specializations : cuid {
+    name  : String(100);
+    trade : Association to Trades;
+}
+
+entity ProfessionalSpecializations : cuid {
+    professional   : Association to Professionals;
+    specialization : Association to Specializations;
 }
 
 entity Categories : cuid {

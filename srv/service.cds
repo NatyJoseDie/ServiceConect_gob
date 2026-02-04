@@ -8,13 +8,30 @@ service AdminService {
     entity Trades as projection on my.Trades;
     entity Categories as projection on my.Categories;
     entity Neighborhoods as projection on my.Neighborhoods;
+    entity Specializations as projection on my.Specializations;
+
+    // Reportes para el Intendente
+    function getMunicipalStats() returns array of {
+        neighborhood : String;
+        trade        : String;
+        count        : Integer;
+    };
 }
 
 service PublicService {
     @readonly
     entity Professionals as projection on my.Professionals {
-        ID, fullName, phone, email, location, latitude, longitude, trade, neighborhood
-    } where isVerified = true;
+        ID, fullName, phone, email, location, latitude, longitude, trade, neighborhood,
+        specializations : redirected to PublicSpecializations
+    } where status = 'ACTIVE';
+
+    @readonly
+    entity PublicSpecializations as projection on my.ProfessionalSpecializations {
+        ID, specialization.name as specName
+    };
+
+    // Búsqueda por Radio de Cercanía
+    function getNearbyProfessionals(lat: Decimal(9,6), lon: Decimal(9,6), radius: Integer) returns array of Professionals;
 }
 
 // UI Annotations for Professionals
@@ -28,7 +45,7 @@ annotate AdminService.Professionals with @(
     UI.SelectionFields : [
         trade_ID,
         neighborhood_ID,
-        isVerified
+        status
     ],
     UI.LineItem : [
         { Value : fullName, Label: 'Nombre Completo' },
@@ -36,13 +53,18 @@ annotate AdminService.Professionals with @(
         { Value : registrationNumber, Label: 'Matrícula' },
         { Value : phone, Label: 'Teléfono' },
         { Value : neighborhood.name, Label: 'Barrio' },
-        { Value : isVerified, Label: 'Verificado' }
+        { Value : status, Label: 'Estado' }
     ],
     UI.Facets : [
         {
             $Type  : 'UI.ReferenceFacet',
             Label  : 'Información General',
             Target : '@UI.FieldGroup#General'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : 'Especialidades',
+            Target : 'specializations/@UI.LineItem'
         },
         {
             $Type  : 'UI.ReferenceFacet',
@@ -53,6 +75,11 @@ annotate AdminService.Professionals with @(
             $Type  : 'UI.ReferenceFacet',
             Label  : 'Ubicación',
             Target : '@UI.FieldGroup#Location'
+        },
+        {
+            $Type  : 'UI.ReferenceFacet',
+            Label  : 'Auditoría Institucional',
+            Target : '@UI.FieldGroup#Audit'
         }
     ],
     UI.FieldGroup #General : {
@@ -60,7 +87,7 @@ annotate AdminService.Professionals with @(
             { Value : fullName },
             { Value : registrationNumber },
             { Value : trade_ID },
-            { Value : isVerified }
+            { Value : status }
         ]
     },
     UI.FieldGroup #Contact : {
@@ -76,7 +103,19 @@ annotate AdminService.Professionals with @(
             { Value : latitude },
             { Value : longitude }
         ]
+    },
+    UI.FieldGroup #Audit : {
+        Data : [
+            { Value : validatedBy, Label: 'Validado por (Operador)' },
+            { Value : validationDate, Label: 'Fecha de Validación' }
+        ]
     }
+);
+
+annotate AdminService.ProfessionalSpecializations with @(
+    UI.LineItem : [
+        { Value : specialization_ID, Label: 'Especialidad' }
+    ]
 );
 
 // Annotations for Value Helps
@@ -107,20 +146,23 @@ annotate AdminService.Professionals with {
     );
 }
 
-annotate AdminService.Trades with {
-    name @Common.Label : 'Oficio';
-    category @(
+annotate AdminService.ProfessionalSpecializations with {
+    specialization @(
         Common.ValueList : {
             $Type : 'Common.ValueListType',
-            CollectionPath : 'Categories',
+            CollectionPath : 'Specializations',
             Parameters : [
-                { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : category_ID, ValueListProperty : 'ID' },
+                { $Type : 'Common.ValueListParameterInOut', LocalDataProperty : specialization_ID, ValueListProperty : 'ID' },
                 { $Type : 'Common.ValueListParameterDisplayOnly', ValueListProperty : 'name' }
             ]
         },
-        Common.Text : category.name,
+        Common.Text : specialization.name,
         Common.TextArrangement : #TextOnly
     );
+}
+
+annotate AdminService.Trades with {
+    name @Common.Label : 'Oficio';
 }
 
 annotate AdminService.Categories with {
@@ -129,4 +171,8 @@ annotate AdminService.Categories with {
 
 annotate AdminService.Neighborhoods with {
     name @Common.Label : 'Barrio';
+}
+
+annotate AdminService.Specializations with {
+    name @Common.Label : 'Especialidad';
 }
