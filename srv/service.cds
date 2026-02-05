@@ -9,6 +9,8 @@ service AdminService {
     entity Categories as projection on my.Categories;
     entity Neighborhoods as projection on my.Neighborhoods;
     entity Specializations as projection on my.Specializations;
+    entity Reviews as projection on my.PublicReviews;
+    entity Citizens as projection on my.Citizens;
 
     // Reportes para el Intendente
     function getMunicipalStats() returns array of {
@@ -21,14 +23,26 @@ service AdminService {
 service PublicService {
     @readonly
     entity Professionals as projection on my.Professionals {
-        ID, fullName, phone, email, location, latitude, longitude, trade, neighborhood,
-        specializations : redirected to PublicSpecializations
+        ID, fullName, phone, email, location, latitude, longitude, registrationNumber,
+        trade, neighborhood,
+        specializations : redirected to PublicSpecializations,
+        reviews : redirected to PublicReviews,
+        null as averageRating : Decimal(3,2)
     } where status = 'ACTIVE';
 
     @readonly
     entity PublicSpecializations as projection on my.ProfessionalSpecializations {
         ID, specialization.name as specName
     };
+
+    @readonly
+    entity PublicReviews as projection on my.PublicReviews {
+        ID, rating, comment, createdAt,
+        citizen.fullName as reviewerName
+    } where isModerated = false;
+
+    @requires: 'authenticated-user'
+    action submitReview(professionalID: UUID, rating: Integer, comment: String);
 
     // Búsqueda por Radio de Cercanía
     function getNearbyProfessionals(lat: Decimal(9,6), lon: Decimal(9,6), radius: Integer) returns array of Professionals;

@@ -23,6 +23,22 @@ entity Professionals : cuid, managed {
     trade              : Association to Trades;
     neighborhood       : Association to Neighborhoods;
     specializations    : Composition of many ProfessionalSpecializations on specializations.professional = $self;
+    reviews            : Composition of many PublicReviews on reviews.professional = $self;
+}
+
+entity Citizens : cuid {
+    googleId : String(100);
+    email    : String(100);
+    fullName : String(100);
+    reviews  : Association to many PublicReviews on reviews.citizen = $self;
+}
+
+entity PublicReviews : cuid, managed {
+    professional : Association to Professionals;
+    citizen      : Association to Citizens;
+    rating       : Integer @assert.range: [1, 5];
+    comment      : String(500);
+    isModerated  : Boolean default false;
 }
 
 entity Trades : cuid {
