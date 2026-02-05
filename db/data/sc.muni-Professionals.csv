@@ -1,4 +1,4 @@
 ID;fullName;registrationNumber;phone;email;location;latitude;longitude;status;validatedBy;validationDate;trade_ID;neighborhood_ID
-p1;Juan Pérez;E-1234;555-0101;juan.perez@email.com;Calle Falsa 123;-34.6037;-58.3816;ACTIVE;OPERADOR_TEST;2024-02-04T10:00:00Z;t1;n1
-p2;María García;P-5678;555-0102;maria.garcia@email.com;Av. Siempre Viva 742;-34.6137;-58.3916;ACTIVE;OPERADOR_TEST;2024-02-04T10:05:00Z;t2;n2
-p3;Carlos López;G-9012;555-0103;carlos.lopez@email.com;Belgrano 456;-34.6037;-58.3816;INACTIVE;OPERADOR_TEST;2024-02-04T10:10:00Z;t4;n3
+p1;Juan Pérez;E-1234;11-5555-0101;juan.perez@email.com;Avenida San Martín 123;-34.8219;-58.2691;ACTIVE;OPERADOR_TEST;2024-02-04T10:00:00Z;t1;n1
+p2;María García;P-5678;11-5555-0102;maria.garcia@email.com;Calle Mitre 742;-34.8150;-58.2750;ACTIVE;OPERADOR_TEST;2024-02-04T10:05:00Z;t2;n2
+p3;Carlos López;G-9012;11-5555-0103;carlos.lopez@email.com;España 456;-34.8250;-58.2800;ACTIVE;OPERADOR_TEST;2024-02-04T10:10:00Z;t4;n3

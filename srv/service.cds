@@ -24,7 +24,7 @@ service PublicService {
     @readonly
     entity Professionals as projection on my.Professionals {
         ID, fullName, phone, email, location, latitude, longitude, registrationNumber,
-        trade, neighborhood,
+        trade.name as tradeName, neighborhood.name as neighborhoodName,
         specializations : redirected to PublicSpecializations,
         reviews : redirected to PublicReviews,
         null as averageRating : Decimal(3,2)
@@ -32,12 +32,12 @@ service PublicService {
 
     @readonly
     entity PublicSpecializations as projection on my.ProfessionalSpecializations {
-        ID, specialization.name as specName
+        ID, professional, specialization.name as specName
     };
 
     @readonly
     entity PublicReviews as projection on my.PublicReviews {
-        ID, rating, comment, createdAt,
+        ID, professional, rating, comment, createdAt,
         citizen.fullName as reviewerName
     } where isModerated = false;
 
