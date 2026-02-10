@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceConnect Muni - Portal Vecino</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="glass-header">
+        <div class="logo">
+            <span class="muni-icon">🏛️</span>
+            <div class="logo-text">
+                <h1>ServiceConnect</h1>
+                <p>Portal Municipal de Oficios</p>
+            </div>
+        </div>
+        <nav>
+            <button id="loginBtn" class="premium-btn">Acceder con Google</button>
+        </nav>
+    </header>
+
+    <main>
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="map-overlay">
+                <div class="search-box glass">
+                    <input type="text" id="tradeSearch" placeholder="Busca un oficio (ej. Plomero)...">
+                    <button id="searchBtn">🔍</button>
+                </div>
+                <div class="v-badge glass">
+                    📍 Florencio Varela
+                </div>
+            </div>
+        </div>
+
+        <section id="professionalList" class="info-panel glass">
+            <h2>Profesionales Destacados</h2>
+            <div class="grid" id="professionalsGrid">
+                <!-- Se cargará dinámicamente -->
+            </div>
+        </section>
+    </main>
+
+    <footer class="glass-footer">
+        <p>&copy; 2024 Gobierno Municipal - Transparencia y Servicio</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

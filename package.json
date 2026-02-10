@@ -1,12 +1,26 @@
 {
   "name": "serviceconnectmuni",
   "version": "1.0.0",
-  "description": "Welcome to your new CAP project.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "ServiceConnect Municipal",
+  "repository": "https://github.com/NatyJoseDie/ServiceConect_gob.git",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "@sap/cds": "^8",
+    "express": "^4"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "@sap/cds-dk": "^8",
+    "sqlite3": "^5.1.7"
+  },
+  "scripts": {
+    "start": "cds-serve",
+    "watch": "cds watch"
+  },
+  "cds": {
+    "requires": {
+      "cors": {
+        "origin": "*"
+      }
+    }
+  }
 }
